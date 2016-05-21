@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQuery", "DQuery\DQuery.csproj", "{03117C4B-C4B6-42A5-9C6B-044665EE0071}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DQuery.UnitTests", "DQuery.UnitTests\DQuery.UnitTests.csproj", "{9FEFB4C9-5BB9-4684-9997-CC53E3FF31E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03117C4B-C4B6-42A5-9C6B-044665EE0071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03117C4B-C4B6-42A5-9C6B-044665EE0071}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03117C4B-C4B6-42A5-9C6B-044665EE0071}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03117C4B-C4B6-42A5-9C6B-044665EE0071}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FEFB4C9-5BB9-4684-9997-CC53E3FF31E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FEFB4C9-5BB9-4684-9997-CC53E3FF31E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FEFB4C9-5BB9-4684-9997-CC53E3FF31E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FEFB4C9-5BB9-4684-9997-CC53E3FF31E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

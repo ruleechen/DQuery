@@ -1,7 +1,7 @@
 ﻿
-namespace DQuery.Extensions
+namespace DQuery
 {
-    public static class ObjectExtensions
+    internal static class ObjectExtensions
     {
         public static string ToStringOrEmpty(this object value)
         {

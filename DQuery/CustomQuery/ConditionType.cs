@@ -1,6 +1,4 @@
-﻿using DQuery.Extensions;
-
-namespace DQuery.CustomQuery
+﻿namespace DQuery.CustomQuery
 {
     public enum ConditionType
     {

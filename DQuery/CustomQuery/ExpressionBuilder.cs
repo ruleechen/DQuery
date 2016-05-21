@@ -9,7 +9,7 @@ namespace DQuery.CustomQuery
 {
     public class ExpressionBuilder
     {
-        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses)
+        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funs = null)
         {
             ConvertClauseValue<TSource>(clauses);
 
@@ -19,7 +19,7 @@ namespace DQuery.CustomQuery
 
             foreach (var clause in clauses)
             {
-                var clauseExp = BuildClauseExp<TSource>(clause, parameter);
+                var clauseExp = BuildClauseExp<TSource>(clause, parameter, funs);
                 var clauseExpType = ExpressionType.Default;
 
                 switch (clause.Condition)
@@ -43,7 +43,7 @@ namespace DQuery.CustomQuery
             return Expression.Lambda<Func<TSource, bool>>(exp, parameter);
         }
 
-        private static Expression BuildClauseExp<TSource>(QueryClause clause, ParameterExpression parameter)
+        private static Expression BuildClauseExp<TSource>(QueryClause clause, ParameterExpression parameter, IEdmFunctions funs = null)
         {
             var memberExp = Expression<Func<TSource, bool>>.Property(parameter, clause.FieldName);
             var propertyType = GetPropertyType(memberExp);
@@ -53,7 +53,7 @@ namespace DQuery.CustomQuery
             Expression propertyExp = memberExp;
             if (clause.ValueType == ValueType.Pyszm)
             {
-                propertyExp = EdmFunctions.GetPyszmExp<TSource>(propertyExp);
+                propertyExp = EdmFunctionsExp.GetPyszmExp<TSource>(propertyExp, funs);
             }
 
             var expType = ExpressionType.Default;

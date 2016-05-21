@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DQuery.Extensions
+namespace DQuery
 {
-    public static class EnumExtensions
+    internal static class EnumExtensions
     {
         public static object GetAttachedValue(this Enum field, object key = null)
         {
@@ -29,7 +29,7 @@ namespace DQuery.Extensions
     }
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
-    public class AttachAttribute : Attribute
+    internal class AttachAttribute : Attribute
     {
         public AttachAttribute(object value)
             : this(null, value)

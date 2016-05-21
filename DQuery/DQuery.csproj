@@ -49,11 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomQuery\ConditionType.cs" />
-    <Compile Include="CustomQuery\EdmFunctions.cs" />
+    <Compile Include="EdmFunctions\EdmFunctionsExp.cs" />
     <Compile Include="CustomQuery\ExpressionBuilder.cs" />
     <Compile Include="CustomQuery\OperatorType.cs" />
     <Compile Include="CustomQuery\QueryClause.cs" />
     <Compile Include="CustomQuery\QueryClauseParser.cs" />
+    <Compile Include="EdmFunctions\IEdmFunctions.cs" />
     <Compile Include="Extensions\QueryExtensions.cs" />
     <Compile Include="CustomQuery\ValueType.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
@@ -63,6 +64,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Data.Objects.DataClasses;
-using System.Linq.Expressions;
 
-namespace DQuery.CustomQuery
+namespace DQuery
 {
-    public class EdmFunctions
+    public interface IEdmFunctions
+    {
+        Func<string, string> GetPyszmFunc();
+    }
+
+    public class SampleFunctions : IEdmFunctions
     {
         [EdmFunction("KTSmartModel.Store", "fun_getpy")]
         public static string GetPyszm(string str)
@@ -12,9 +16,9 @@ namespace DQuery.CustomQuery
             throw new NotSupportedException("Direct calls are not supported.");
         }
 
-        public static Expression GetPyszmExp<TSource>(Expression argument)
+        public Func<string, string> GetPyszmFunc()
         {
-            return Expression<Func<TSource, bool>>.Call(null, typeof(EdmFunctions).GetMethod("GetPyszm"), argument);
+            return new Func<string, string>(SampleFunctions.GetPyszm);
         }
     }
 }

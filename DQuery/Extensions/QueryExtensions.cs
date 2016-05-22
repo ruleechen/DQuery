@@ -21,11 +21,11 @@ namespace DQuery
             return (source as IQueryable<TSource>).Where(json, funs);
         }
 
-        public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, string json)
+        public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, string json, IEdmFunctions funs)
             where TSource : class
         {
             var clauses = QueryClauseParser.Parse(json);
-            var lambda = ExpressionBuilder.Build<TSource>(clauses.ToList());
+            var lambda = ExpressionBuilder.Build<TSource>(clauses.ToList(), funs);
             return source.Where(lambda.Compile());
         }
     }

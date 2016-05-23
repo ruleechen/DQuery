@@ -9,19 +9,18 @@ namespace DQuery.CustomQuery
 {
     public class ExpressionBuilder
     {
-        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funs = null)
+        #region Build
+        public IEdmFunctions EdmFunctions { get; set; }
+
+        public Expression BuildClauseExp<TSource>(List<QueryClause> clauses, ParameterExpression parameter)
         {
             ConvertClauseValue<TSource>(clauses);
-
-            var parameter = Expression.Parameter(typeof(TSource), "x");
 
             Expression exp = Expression<Func<TSource, bool>>.Constant(true);
 
             foreach (var clause in clauses)
             {
-                var clauseExp = BuildClauseExp<TSource>(clause, parameter, funs);
                 var clauseExpType = ExpressionType.Default;
-
                 switch (clause.Condition)
                 {
                     case ConditionType.None:
@@ -37,13 +36,23 @@ namespace DQuery.CustomQuery
                         throw new NotSupportedException(clause.Condition.ToString());
                 }
 
+                Expression clauseExp;
+                if (clause.Items.Count > 0)
+                {
+                    clauseExp = BuildClauseExp<TSource>(clause.Items, parameter);
+                }
+                else
+                {
+                    clauseExp = BuildClauseExp<TSource>(clause, parameter);
+                }
+
                 exp = Expression<Func<TSource, bool>>.MakeBinary(clauseExpType, exp, clauseExp);
             }
 
-            return Expression.Lambda<Func<TSource, bool>>(exp, parameter);
+            return exp;
         }
 
-        private static Expression BuildClauseExp<TSource>(QueryClause clause, ParameterExpression parameter, IEdmFunctions funs = null)
+        public Expression BuildClauseExp<TSource>(QueryClause clause, ParameterExpression parameter)
         {
             var memberExp = Expression<Func<TSource, bool>>.Property(parameter, clause.FieldName);
             var propertyType = GetPropertyType(memberExp);
@@ -53,7 +62,7 @@ namespace DQuery.CustomQuery
             Expression propertyExp = memberExp;
             if (clause.ValueType == ValueType.Pyszm)
             {
-                propertyExp = EdmFunctionsExp.GetPyszmExp<TSource>(propertyExp, funs);
+                propertyExp = EdmFunctionsExp.GetPyszmExp<TSource>(propertyExp, EdmFunctions);
             }
 
             var expType = ExpressionType.Default;
@@ -104,13 +113,23 @@ namespace DQuery.CustomQuery
             return Expression<Func<TSource, bool>>.MakeBinary(expType, propertyExp, propertyValueExp);
         }
 
+        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
+        {
+            var builder = new ExpressionBuilder { EdmFunctions = funcs };
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            var expression = builder.BuildClauseExp<TSource>(clauses, parameter);
+            return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
+        }
+
         private static BinaryExpression GetStringContainsExp<TSource>(Expression instance, Expression argument, bool contains)
         {
             var trueExp = Expression<Func<TSource, bool>>.Constant(true);
             var containsExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("Contains"), argument);
             return Expression<Func<TSource, bool>>.MakeBinary(contains ? ExpressionType.Equal : ExpressionType.NotEqual, containsExp, trueExp);
         }
+        #endregion
 
+        #region helpers
         private static Type GetPropertyType(MemberExpression exp)
         {
             if (exp.Member.MemberType == MemberTypes.Property)
@@ -193,5 +212,6 @@ namespace DQuery.CustomQuery
 
             return mapper;
         }
+        #endregion
     }
 }

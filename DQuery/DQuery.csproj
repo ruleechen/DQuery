@@ -55,6 +55,7 @@
     <Compile Include="CustomQuery\QueryClause.cs" />
     <Compile Include="CustomQuery\QueryClauseParser.cs" />
     <Compile Include="EdmFunctions\IEdmFunctions.cs" />
+    <Compile Include="EdmFunctions\SampleFunctions.cs" />
     <Compile Include="Extensions\QueryExtensions.cs" />
     <Compile Include="CustomQuery\ValueType.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />

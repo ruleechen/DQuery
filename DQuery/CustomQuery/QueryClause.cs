@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace DQuery.CustomQuery
 {
@@ -13,6 +14,8 @@ namespace DQuery.CustomQuery
         public ValueType ValueType { get; set; }
 
         public object Value { get; set; }
+
+        public List<QueryClause> Items { get; set; }
     }
 
     public class QueryClauseRaw
@@ -31,5 +34,8 @@ namespace DQuery.CustomQuery
 
         [JsonProperty("value")]
         public object Value { get; set; }
+
+        [JsonProperty("items")]
+        public List<QueryClauseRaw> Items { get; set; }
     }
 }

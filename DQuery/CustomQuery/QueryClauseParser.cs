@@ -36,11 +36,21 @@ namespace DQuery.CustomQuery
             }
         }
 
-        public static IEnumerable<QueryClause> Parse(string json)
+        public static List<QueryClause> Parse(string json)
         {
             json = string.IsNullOrWhiteSpace(json) ? "[]" : json;
 
             var raws = JsonConvert.DeserializeObject<List<QueryClauseRaw>>(json);
+
+            return ParseItems(raws);
+        }
+
+        private static List<QueryClause> ParseItems(List<QueryClauseRaw> raws)
+        {
+            if (raws == null)
+            {
+                return new List<QueryClause>();
+            }
 
             return raws.Select(x => new QueryClause
             {
@@ -48,8 +58,10 @@ namespace DQuery.CustomQuery
                 FieldName = x.FieldName,
                 Operator = ParseOperatorType(x.Operator),
                 ValueType = ParseValueType(x.ValueType),
-                Value = x.Value
-            });
+                Value = x.Value,
+                Items = ParseItems(x.Items)
+            })
+            .ToList();
         }
 
         private static ConditionType ParseConditionType(string type)

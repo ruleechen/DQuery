@@ -62,7 +62,7 @@ namespace DQuery.CustomQuery
             Expression propertyExp = memberExp;
             if (clause.ValueType == ValueType.Pyszm)
             {
-                propertyExp = EdmFunctionsExp.GetPyszmExp<TSource>(propertyExp, EdmFunctions);
+                propertyExp = GetPyszmExp<TSource>(propertyExp, EdmFunctions);
             }
 
             var expType = ExpressionType.Default;
@@ -126,6 +126,22 @@ namespace DQuery.CustomQuery
             var trueExp = Expression<Func<TSource, bool>>.Constant(true);
             var containsExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("Contains"), argument);
             return Expression<Func<TSource, bool>>.MakeBinary(contains ? ExpressionType.Equal : ExpressionType.NotEqual, containsExp, trueExp);
+        }
+
+        public static Expression GetPyszmExp<TSource>(Expression argument, IEdmFunctions funcs)
+        {
+            if (funcs == null)
+            {
+                throw new NotSupportedException("DQuery functions not specified.");
+            }
+
+            var func = funcs.GetPyszmFunc();
+            if (func == null)
+            {
+                throw new NotImplementedException("Pyszm function not implemented.");
+            }
+
+            return Expression<Func<TSource, bool>>.Call(null, func.Method, argument);
         }
         #endregion
 

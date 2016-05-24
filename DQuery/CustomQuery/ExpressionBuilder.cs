@@ -80,6 +80,7 @@ namespace DQuery.CustomQuery
                         break;
 
                     case "isnull":
+                        propertyExp = GetIsnullExp<TSource>(propertyExp, clause.ExFunction);
                         break;
                 }
             }
@@ -145,6 +146,11 @@ namespace DQuery.CustomQuery
             var trueExp = Expression<Func<TSource, bool>>.Constant(true);
             var containsExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("Contains"), argument);
             return Expression<Func<TSource, bool>>.MakeBinary(contains ? ExpressionType.Equal : ExpressionType.NotEqual, containsExp, trueExp);
+        }
+
+        public static Expression GetIsnullExp<TSource>(Expression argument, ExFunction exfun)
+        {
+            throw new NotImplementedException();
         }
 
         public static Expression GetPyszmExp<TSource>(Expression argument, IEdmFunctions funcs)

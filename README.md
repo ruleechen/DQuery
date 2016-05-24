@@ -1,6 +1,9 @@
 # DQuery
 Dynamic Query Builder for yundangnet
 
+Sample JSON for query
+------------
+```javascript
 [
   {
     "operator": "=",
@@ -30,3 +33,4 @@ Dynamic Query Builder for yundangnet
     ]
   }
 ]
+```

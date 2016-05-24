@@ -13,7 +13,7 @@ namespace DQuery.CustomQuery
 
         public object Value { get; set; }
 
-        public FunctionEx FunctionEx { get; set; }
+        public ExFunction ExFunction { get; set; }
 
         public List<QueryClause> Items { get; set; }
     }
@@ -33,7 +33,7 @@ namespace DQuery.CustomQuery
         public object Value { get; set; }
 
         [JsonProperty("exfuc")]
-        public FunctionEx FunctionEx { get; set; }
+        public ExFunction ExFunction { get; set; }
 
         [JsonProperty("items")]
         public List<QueryClauseRaw> Items { get; set; }

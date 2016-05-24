@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DQuery.CustomQuery
 {
-    public class FunctionEx
+    public class ExFunction
     {
         [JsonProperty("name")]
         public string Name { get; set; }

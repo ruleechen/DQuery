@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomQuery\ConditionType.cs" />
-    <Compile Include="CustomQuery\FunctionEx.cs" />
+    <Compile Include="CustomQuery\ExFunction.cs" />
     <Compile Include="CustomQuery\ExpressionBuilder.cs" />
     <Compile Include="CustomQuery\OperatorType.cs" />
     <Compile Include="CustomQuery\QueryClause.cs" />

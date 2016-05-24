@@ -14,9 +14,9 @@ namespace DQuery.CustomQuery
 
         public Expression BuildClauseExp<TSource>(List<QueryClause> clauses, ParameterExpression parameter)
         {
-            ConvertClauseValue<TSource>(clauses);
+            Expression exp = null;
 
-            Expression exp = Expression<Func<TSource, bool>>.Constant(true);
+            ConvertClauseValue<TSource>(clauses);
 
             foreach (var clause in clauses)
             {
@@ -46,7 +46,14 @@ namespace DQuery.CustomQuery
                     clauseExp = BuildClauseExp<TSource>(clause, parameter);
                 }
 
-                exp = Expression<Func<TSource, bool>>.MakeBinary(clauseExpType, exp, clauseExp);
+                if (exp == null)
+                {
+                    exp = clauseExp;
+                }
+                else
+                {
+                    exp = Expression<Func<TSource, bool>>.MakeBinary(clauseExpType, exp, clauseExp);
+                }
             }
 
             return exp;

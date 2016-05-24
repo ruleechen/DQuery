@@ -23,13 +23,16 @@ namespace DQuery.CustomQuery
                 var clauseExpType = ExpressionType.Default;
                 switch (clause.Condition)
                 {
-                    case ConditionType.None:
                     case ConditionType.And:
                         clauseExpType = ExpressionType.And;
                         break;
 
                     case ConditionType.Or:
                         clauseExpType = ExpressionType.Or;
+                        break;
+
+                    case ConditionType.None:
+                        if (exp != null) { throw new InvalidOperationException("Missing condition type."); }
                         break;
 
                     default:

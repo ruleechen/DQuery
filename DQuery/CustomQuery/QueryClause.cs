@@ -11,8 +11,6 @@ namespace DQuery.CustomQuery
 
         public OperatorType Operator { get; set; }
 
-        public ValueType ValueType { get; set; }
-
         public object Value { get; set; }
 
         public FunctionEx FunctionEx { get; set; }
@@ -30,9 +28,6 @@ namespace DQuery.CustomQuery
 
         [JsonProperty("operator")]
         public string Operator { get; set; }
-
-        [JsonProperty("valuetype")]
-        public string ValueType { get; set; }
 
         [JsonProperty("value")]
         public object Value { get; set; }

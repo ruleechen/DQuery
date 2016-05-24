@@ -67,9 +67,18 @@ namespace DQuery.CustomQuery
             var propertyValueExp = Expression<Func<TSource, bool>>.Constant(propertyValue, propertyType);
 
             Expression propertyExp = memberExp;
-            if (clause.ValueType == ValueType.Pyszm)
+            if (clause.FunctionEx != null)
             {
-                propertyExp = GetPyszmExp<TSource>(propertyExp, EdmFunctions);
+                var name = (clause.FunctionEx.Name ?? string.Empty).ToLower();
+                switch (name)
+                {
+                    case "pyszm":
+                        propertyExp = GetPyszmExp<TSource>(propertyExp, EdmFunctions);
+                        break;
+
+                    case "isnull":
+                        break;
+                }
             }
 
             var expType = ExpressionType.Default;

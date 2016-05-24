@@ -59,6 +59,7 @@ namespace DQuery.CustomQuery
                 Operator = ParseOperatorType(x.Operator),
                 ValueType = ParseValueType(x.ValueType),
                 Value = x.Value,
+                FunctionEx = x.FunctionEx,
                 Items = ParseItems(x.Items)
             })
             .ToList();

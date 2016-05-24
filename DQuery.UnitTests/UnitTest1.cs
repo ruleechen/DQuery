@@ -11,7 +11,7 @@ namespace DQuery.UnitTests
     {
         private List<QueryClause> GetClauses()
         {
-            return QueryClauseParser.Parse("[{\"operator\": \"<>\",\"condition\": \"\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"}, {\"Operator\":\"<>\",\"Condition\":\"and\",\"Value\":\"101\",\"ValueType\":\"string\",\"FieldName\":\"cuscd\",\"items\":[{\"operator\": \"<>\",\"condition\": \"\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"},{\"operator\": \"<>\",\"condition\": \"\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"}]}]");
+            return QueryClauseParser.Parse("[{\"operator\": \"<>\",\"condition\": \"\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"}, {\"Operator\":\"<>\",\"Condition\":\"and\",\"Value\":\"101\",\"ValueType\":\"string\",\"FieldName\":\"cuscd\",\"items\":[{\"operator\": \"<>\",\"condition\": \"\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"},{\"operator\": \"<>\",\"condition\": \"and\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"}]}]");
         }
 
         [TestMethod]
@@ -30,7 +30,6 @@ namespace DQuery.UnitTests
         {
             var clauses = GetClauses();
             var lambda = ExpressionBuilder.Build<SampleEntity>(clauses, new SampleFunctions());
-
         }
     }
 

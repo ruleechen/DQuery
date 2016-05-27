@@ -2,22 +2,23 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Collections.Generic;
+using DQuery;
 using DQuery.CustomQuery;
+
 
 namespace DQuery.UnitTests
 {
     [TestClass]
     public class UnitTest1
     {
-        private List<QueryClause> GetClauses()
+        private string GetJson()
         {
-            return QueryClauseParser.Parse("[{\"operator\":\"=\",\"value\":\"001\",\"fieldname\":\"billno\",\"exfuc\":{\"name\":\"pyszm\"}},{\"condition\":\"and\",\"items\":[{\"operator\":\"like\",\"value\":\"A\",\"fieldname\":\"cusclass\"},{\"operator\":\"like\",\"condition\":\"or\",\"value\":\"YUN\",\"fieldname\":\"cusname\",\"exfuc\":{\"name\":\"isnull\",\"params\":[\"a\"]}}]}]");
+            return "[{\"operator\":\"=\",\"value\":\"002\",\"fieldname\":\"billno\"},{\"condition\":\"and\",\"items\":[{\"operator\":\"like\",\"value\":\"A\",\"fieldname\":\"cusclass\"},{\"operator\":\"like\",\"condition\":\"or\",\"value\":\"YUN\",\"fieldname\":\"cusname\",\"exfuc\":{\"name\":\"isnull\",\"params\":[\"bYUNb\"]}}]}]";
         }
 
-        [TestMethod]
-        public void TestParser()
+        private List<QueryClause> GetClauses()
         {
-            var clauses = GetClauses();
+            return QueryClauseParser.Parse(GetJson());
         }
 
         [TestMethod]
@@ -25,6 +26,14 @@ namespace DQuery.UnitTests
         {
             var clauses = GetClauses();
             var lambda = ExpressionBuilder.Build<SampleEntity>(clauses, new SampleFunctions());
+
+            var entities = new List<SampleEntity>();
+            entities.Add(new SampleEntity { billno = "001", cusclass = "ABC", cusname = null });
+            entities.Add(new SampleEntity { billno = "002", cusclass = "A", cusname = "" });
+            var result = entities.Where(GetJson(), new SampleFunctions()).ToList();
+
+            Assert.AreEqual(result.Count, 1);
+            Assert.AreEqual(result[0].billno, "002");
         }
     }
 

@@ -9,13 +9,11 @@ namespace DQuery.CustomQuery
     {
         static Dictionary<string, ConditionType> ConditionTypeDict;
         static Dictionary<string, OperatorType> OperatorTypeDict;
-        static Dictionary<string, ValueType> ValueTypeDict;
 
         static QueryClauseParser()
         {
             ConditionTypeDict = new Dictionary<string, ConditionType>(StringComparer.OrdinalIgnoreCase);
             OperatorTypeDict = new Dictionary<string, OperatorType>(StringComparer.OrdinalIgnoreCase);
-            ValueTypeDict = new Dictionary<string, ValueType>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var item in Enum.GetValues(typeof(ConditionType)))
             {
@@ -28,28 +26,34 @@ namespace DQuery.CustomQuery
                 var field = (OperatorType)item;
                 OperatorTypeDict.Add(field.GetAttachedValue().ToStringOrEmpty(), field);
             }
-
-            foreach (var item in Enum.GetValues(typeof(ValueType)))
-            {
-                var field = (ValueType)item;
-                ValueTypeDict.Add(field.GetAttachedValue().ToStringOrEmpty(), field);
-            }
         }
 
-        public static IEnumerable<QueryClause> Parse(string json)
+        public static List<QueryClause> Parse(string json)
         {
             json = string.IsNullOrWhiteSpace(json) ? "[]" : json;
 
             var raws = JsonConvert.DeserializeObject<List<QueryClauseRaw>>(json);
+
+            return ParseItems(raws);
+        }
+
+        private static List<QueryClause> ParseItems(List<QueryClauseRaw> raws)
+        {
+            if (raws == null)
+            {
+                return new List<QueryClause>();
+            }
 
             return raws.Select(x => new QueryClause
             {
                 Condition = ParseConditionType(x.Condition),
                 FieldName = x.FieldName,
                 Operator = ParseOperatorType(x.Operator),
-                ValueType = ParseValueType(x.ValueType),
-                Value = x.Value
-            });
+                Value = x.Value,
+                ExFunction = x.ExFunction,
+                Items = ParseItems(x.Items)
+            })
+            .ToList();
         }
 
         private static ConditionType ParseConditionType(string type)
@@ -60,11 +64,6 @@ namespace DQuery.CustomQuery
         private static OperatorType ParseOperatorType(string type)
         {
             return OperatorTypeDict.ContainsKey(type) ? OperatorTypeDict[type] : OperatorType.None;
-        }
-
-        private static ValueType ParseValueType(string type)
-        {
-            return ValueTypeDict.ContainsKey(type) ? ValueTypeDict[type] : ValueType.String;
         }
     }
 }

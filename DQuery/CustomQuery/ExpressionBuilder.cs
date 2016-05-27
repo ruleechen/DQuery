@@ -139,11 +139,12 @@ namespace DQuery.CustomQuery
             return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
         }
 
-        private static BinaryExpression GetStringContainsExp<TSource>(Expression instance, Expression argument, bool contains)
+        private static Expression GetStringContainsExp<TSource>(Expression instance, Expression argument, bool contains)
         {
             var trueExp = Expression<Func<TSource, bool>>.Constant(true);
             var containsExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("Contains"), argument);
-            return Expression<Func<TSource, bool>>.MakeBinary(contains ? ExpressionType.Equal : ExpressionType.NotEqual, containsExp, trueExp);
+            if (!contains) { return Expression<Func<TSource, bool>>.Not(containsExp); }
+            return containsExp;
         }
 
         public static Expression GetIsnullExp<TSource>(MemberExpression member, List<object> parameters)

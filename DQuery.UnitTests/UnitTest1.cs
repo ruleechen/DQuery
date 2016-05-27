@@ -11,7 +11,7 @@ namespace DQuery.UnitTests
     {
         private List<QueryClause> GetClauses()
         {
-            return QueryClauseParser.Parse("[{\"operator\":\"=\",\"value\":\"001\",\"fieldname\":\"billno\",\"exfuc\":{\"name\":\"pyszm\"}},{\"condition\":\"and\",\"items\":[{\"operator\":\"like\",\"value\":\"A\",\"fieldname\":\"cusclass\"},{\"operator\":\"like\",\"condition\":\"or\",\"value\":\"YUN\",\"fieldname\":\"cusname\",\"exfuc\":{\"name\":\"isnull\",\"parameters\":[\"a\"]}}]}]");
+            return QueryClauseParser.Parse("[{\"operator\":\"=\",\"value\":\"001\",\"fieldname\":\"billno\",\"exfuc\":{\"name\":\"pyszm\"}},{\"condition\":\"and\",\"items\":[{\"operator\":\"like\",\"value\":\"A\",\"fieldname\":\"cusclass\"},{\"operator\":\"like\",\"condition\":\"or\",\"value\":\"YUN\",\"fieldname\":\"cusname\",\"exfuc\":{\"name\":\"isnull\",\"params\":[\"a\"]}}]}]");
         }
 
         [TestMethod]

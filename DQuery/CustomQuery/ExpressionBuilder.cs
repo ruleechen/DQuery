@@ -65,22 +65,20 @@ namespace DQuery.CustomQuery
         public Expression BuildClauseExp<TSource>(QueryClause clause, ParameterExpression parameter)
         {
             var memberExp = Expression<Func<TSource, bool>>.Property(parameter, clause.FieldName);
-            var propertyType = GetPropertyType(memberExp);
-            var propertyValue = ConvertClauseValue(clause.Value, propertyType);
-            var propertyValueExp = Expression<Func<TSource, bool>>.Constant(propertyValue, propertyType);
+            var memberValueExp = Expression<Func<TSource, bool>>.Constant(clause.Value, GetMemberType(memberExp.Member));
 
-            Expression propertyExp = memberExp;
+            Expression composedExp = memberExp;
             if (clause.ExFunction != null)
             {
                 var name = (clause.ExFunction.Name ?? string.Empty).ToLower();
                 switch (name)
                 {
                     case "pyszm":
-                        propertyExp = GetPyszmExp<TSource>(propertyExp, EdmFunctions);
+                        composedExp = GetPyszmExp<TSource>(memberExp, EdmFunctions);
                         break;
 
                     case "isnull":
-                        propertyExp = GetIsnullExp<TSource>(propertyExp, clause.ExFunction);
+                        composedExp = GetIsnullExp<TSource>(memberExp, clause.ExFunction.Parameters);
                         break;
                 }
             }
@@ -117,10 +115,10 @@ namespace DQuery.CustomQuery
                     break;
 
                 case OperatorType.Like:
-                    return GetStringContainsExp<TSource>(propertyExp, propertyValueExp, true);
+                    return GetStringContainsExp<TSource>(composedExp, memberValueExp, true);
 
                 case OperatorType.NotLike:
-                    return GetStringContainsExp<TSource>(propertyExp, propertyValueExp, false);
+                    return GetStringContainsExp<TSource>(composedExp, memberValueExp, false);
 
                 case OperatorType.In:
                     //TODO:
@@ -130,7 +128,7 @@ namespace DQuery.CustomQuery
                     throw new NotSupportedException(clause.Operator.ToString());
             }
 
-            return Expression<Func<TSource, bool>>.MakeBinary(expType, propertyExp, propertyValueExp);
+            return Expression<Func<TSource, bool>>.MakeBinary(expType, composedExp, memberValueExp);
         }
 
         public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
@@ -148,12 +146,30 @@ namespace DQuery.CustomQuery
             return Expression<Func<TSource, bool>>.MakeBinary(contains ? ExpressionType.Equal : ExpressionType.NotEqual, containsExp, trueExp);
         }
 
-        public static Expression GetIsnullExp<TSource>(Expression argument, ExFunction exfun)
+        public static Expression GetIsnullExp<TSource>(MemberExpression member, List<object> parameters)
         {
-            throw new NotImplementedException();
+            var memberType = GetMemberType(member.Member);
+
+            var canBeNull = (!memberType.IsValueType || (Nullable.GetUnderlyingType(memberType) != null));
+            if (!canBeNull)
+            {
+                return member;
+            }
+
+            if (parameters == null || parameters.Count == 0)
+            {
+                throw new ArgumentNullException("Isnull function require a parameter");
+            }
+
+            var defaultValue = ConvertValue<TSource>(member.Member, parameters.First(), memberType);
+            var defaultValueExp = Expression<Func<TSource, bool>>.Constant(defaultValue, memberType);
+
+            var nullExp = Expression<Func<TSource, bool>>.Constant(null);
+            var compareExp = Expression<Func<TSource, bool>>.MakeBinary(ExpressionType.Equal, member, nullExp);
+            return Expression<Func<TSource, bool>>.Condition(compareExp, defaultValueExp, member);
         }
 
-        public static Expression GetPyszmExp<TSource>(Expression argument, IEdmFunctions funcs)
+        public static Expression GetPyszmExp<TSource>(MemberExpression argument, IEdmFunctions funcs)
         {
             if (funcs == null)
             {
@@ -171,31 +187,40 @@ namespace DQuery.CustomQuery
         #endregion
 
         #region helpers
-        private static Type GetPropertyType(MemberExpression exp)
+        private static Type GetMemberType(MemberInfo member)
         {
-            if (exp.Member.MemberType == MemberTypes.Property)
+            if (member.MemberType == MemberTypes.Property)
             {
-                return (exp.Member as PropertyInfo).PropertyType;
+                return (member as PropertyInfo).PropertyType;
             }
 
-            if (exp.Member.MemberType == MemberTypes.Field)
+            if (member.MemberType == MemberTypes.Field)
             {
-                return (exp.Member as FieldInfo).FieldType;
+                return (member as FieldInfo).FieldType;
             }
 
-            throw new NotSupportedException(exp.Member.MemberType.ToString());
+            throw new NotSupportedException(member.MemberType.ToString());
         }
 
-        private static object ConvertClauseValue(object value, Type valueType)
+        private static object ConvertValue<TSource>(MemberInfo member, object value, Type valueType)
         {
-            try
+            var values = new Dictionary<string, object>();
+            values.Add(member.Name, value);
+
+            var mapper = CreateMapper();
+            var instance = mapper.Map<TSource>(values);
+
+            if (member.MemberType == MemberTypes.Property)
             {
-                return Convert.ChangeType(value, valueType);
+                return (member as PropertyInfo).GetValue(instance);
             }
-            catch
+
+            if (member.MemberType == MemberTypes.Field)
             {
-                return value;
+                return (member as FieldInfo).GetValue(instance);
             }
+
+            throw new NotSupportedException(member.MemberType.ToString());
         }
 
         private static void ConvertClauseValue<TSource>(IEnumerable<QueryClause> clauses, IEnumerable<PropertyInfo> propertyInfos = null)

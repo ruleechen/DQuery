@@ -8,7 +8,7 @@ namespace DQuery.CustomQuery
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("parameters")]
+        [JsonProperty("params")]
         public List<object> Parameters { get; set; }
     }
 }

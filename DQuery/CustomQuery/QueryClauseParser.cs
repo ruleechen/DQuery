@@ -58,12 +58,12 @@ namespace DQuery.CustomQuery
 
         private static ConditionType ParseConditionType(string type)
         {
-            return ConditionTypeDict.ContainsKey(type) ? ConditionTypeDict[type] : ConditionType.None;
+            return type != null && ConditionTypeDict.ContainsKey(type) ? ConditionTypeDict[type] : ConditionType.None;
         }
 
         private static OperatorType ParseOperatorType(string type)
         {
-            return OperatorTypeDict.ContainsKey(type) ? OperatorTypeDict[type] : OperatorType.None;
+            return type != null && OperatorTypeDict.ContainsKey(type) ? OperatorTypeDict[type] : OperatorType.None;
         }
     }
 }

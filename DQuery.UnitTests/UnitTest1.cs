@@ -11,18 +11,13 @@ namespace DQuery.UnitTests
     {
         private List<QueryClause> GetClauses()
         {
-            return QueryClauseParser.Parse("[{\"operator\": \"<>\",\"condition\": \"\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"}, {\"Operator\":\"<>\",\"Condition\":\"and\",\"Value\":\"101\",\"ValueType\":\"string\",\"FieldName\":\"cuscd\",\"items\":[{\"operator\": \"<>\",\"condition\": \"\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"},{\"operator\": \"<>\",\"condition\": \"and\",\"value\": \"001\",\"valueType\": \"string\",\"fieldname\": \"cuscd\"}]}]");
+            return QueryClauseParser.Parse("[{\"operator\":\"=\",\"value\":\"001\",\"fieldname\":\"billno\",\"exfuc\":{\"name\":\"pyszm\"}},{\"condition\":\"and\",\"items\":[{\"operator\":\"like\",\"value\":\"A\",\"fieldname\":\"cusclass\"},{\"operator\":\"like\",\"condition\":\"or\",\"value\":\"YUN\",\"fieldname\":\"cusname\",\"exfuc\":{\"name\":\"isnull\",\"parameters\":[\"a\"]}}]}]");
         }
 
         [TestMethod]
         public void TestParser()
         {
             var clauses = GetClauses();
-
-            Assert.AreEqual(clauses.Count, 2);
-            Assert.AreEqual(clauses[0].Items.Count, 0);
-            Assert.AreEqual(clauses[1].Items.Count, 2);
-            Assert.AreEqual(clauses[0].Operator, OperatorType.NotEqual);
         }
 
         [TestMethod]
@@ -35,6 +30,8 @@ namespace DQuery.UnitTests
 
     public class SampleEntity
     {
-        public string cuscd { get; set; }
+        public string billno { get; set; }
+        public string cusclass { get; set; }
+        public string cusname { get; set; }
     }
 }

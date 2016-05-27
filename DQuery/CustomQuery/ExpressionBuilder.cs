@@ -161,7 +161,7 @@ namespace DQuery.CustomQuery
                 throw new ArgumentNullException("Isnull function require a parameter");
             }
 
-            var defaultValue = ConvertValue<TSource>(member.Member, parameters.First(), memberType);
+            var defaultValue = ConvertValue<TSource>(member.Member, parameters.First());
             var defaultValueExp = Expression<Func<TSource, bool>>.Constant(defaultValue, memberType);
 
             var nullExp = Expression<Func<TSource, bool>>.Constant(null);
@@ -202,7 +202,7 @@ namespace DQuery.CustomQuery
             throw new NotSupportedException(member.MemberType.ToString());
         }
 
-        private static object ConvertValue<TSource>(MemberInfo member, object value, Type valueType)
+        private static object ConvertValue<TSource>(MemberInfo member, object value)
         {
             var values = new Dictionary<string, object>();
             values.Add(member.Name, value);

@@ -9,7 +9,9 @@ Sample JSON for query
     "operator": "=",
     "value": "001",
     "fieldname": "billno",
-    "exfuc": "pyszm"
+    "exfuc": {
+      "name": "pyszm"
+    }
   },
   {
     "condition": "and",
@@ -24,7 +26,10 @@ Sample JSON for query
         "condition": "or",
         "value": "YUN",
         "fieldname": "cusname",
-        "exfuc": "isnull"
+        "exfuc": {
+          "name": "isnull",
+          "params": ["abc"]
+        }
       }
     ]
   }

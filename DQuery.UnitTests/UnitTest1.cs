@@ -40,8 +40,8 @@ namespace DQuery.UnitTests
         [TestMethod]
         public void TestBuilder()
         {
-            ar clauses = GetClauses();
-            var lambda = ExpressionBuilder.Build<SampleEntity>(clauses, new SampleFunctions());
+            var clauses = GetClauses();
+            var lambda = ExpressionBuilder.Build<Property>(clauses, new SampleFunctions());
 
             using (var dataContext = new DemoEntities())
             {

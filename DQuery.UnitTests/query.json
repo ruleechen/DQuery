@@ -3,5 +3,21 @@
 	"fieldname": "PropertyName",
     "operator": "=",
     "value": "Casa Jade"
+  },
+  {
+    "condition": "and",
+    "items": [
+      {
+		"fieldname": "PropertyTitle",
+        "operator": "like",
+        "value": "Es"
+      },
+      {
+		"fieldname": "PropertyTitle",
+        "operator": "not like",
+        "condition": "or",
+        "value": "aaa"
+      }
+    ]
   }
 ]

@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DemoModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="DemoModelStoreContainer">
+          <EntitySet Name="Property" EntityType="DemoModel.Store.Property" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="Property">
+          <Key>
+            <PropertyRef Name="PropertyID" />
+          </Key>
+          <Property Name="PropertyID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="PropertyTitle" Type="varchar" MaxLength="800" />
+          <Property Name="ProductTypeID" Type="int" />
+          <Property Name="PropertyName" Type="varchar" MaxLength="100" />
+          <Property Name="BreakagesDeposit" Type="money" />
+          <Property Name="TermsID" Type="int" />
+          <Property Name="CurrencyID" Type="int" />
+          <Property Name="RowCompanyID" Type="int" />
+          <Property Name="RowContactID" Type="int" />
+          <Property Name="UmbracoNodeID" Type="int" />
+          <Property Name="PropertyReference" Type="int" />
+          <Property Name="RentalNotes" Type="varchar(max)" />
+          <Property Name="ContractRenewalDate" Type="date" />
+          <Property Name="UseCustomWeekend" Type="bit" Nullable="false" />
+          <Property Name="EnableStayLengthDiscount" Type="bit" Nullable="false" />
+          <Property Name="EnableEarlyBirdDiscount" Type="bit" Nullable="false" />
+          <Property Name="EnableLastMinuteDiscount" Type="bit" Nullable="false" />
+          <Property Name="EnablePricingGroups" Type="bit" Nullable="false" />
+          <Property Name="EnableSmallPartyDiscount" Type="bit" Nullable="false" />
+          <Property Name="ChangeoverDayID" Type="int" />
+          <Property Name="IsDraft" Type="bit" Nullable="false" />
+          <Property Name="LinkedPropertyIds" Type="varchar" MaxLength="200" />
+        </EntityType>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DemoModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DemoEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Properties" EntityType="DemoModel.Property" />
+        </EntityContainer>
+        <EntityType Name="Property">
+          <Key>
+            <PropertyRef Name="PropertyID" />
+          </Key>
+          <Property Name="PropertyID" Type="Int32" Nullable="false" />
+          <Property Name="CompanyID" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="PropertyTitle" Type="String" MaxLength="800" Unicode="false" FixedLength="false" />
+          <Property Name="ProductTypeID" Type="Int32" />
+          <Property Name="PropertyName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="BreakagesDeposit" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TermsID" Type="Int32" />
+          <Property Name="CurrencyID" Type="Int32" />
+          <Property Name="RowCompanyID" Type="Int32" />
+          <Property Name="RowContactID" Type="Int32" />
+          <Property Name="UmbracoNodeID" Type="Int32" />
+          <Property Name="PropertyReference" Type="Int32" />
+          <Property Name="RentalNotes" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Name="ContractRenewalDate" Type="DateTime" Precision="0" />
+          <Property Name="UseCustomWeekend" Type="Boolean" Nullable="false" />
+          <Property Name="EnableStayLengthDiscount" Type="Boolean" Nullable="false" />
+          <Property Name="EnableEarlyBirdDiscount" Type="Boolean" Nullable="false" />
+          <Property Name="EnableLastMinuteDiscount" Type="Boolean" Nullable="false" />
+          <Property Name="EnablePricingGroups" Type="Boolean" Nullable="false" />
+          <Property Name="EnableSmallPartyDiscount" Type="Boolean" Nullable="false" />
+          <Property Name="ChangeoverDayID" Type="Int32" />
+          <Property Name="IsDraft" Type="Boolean" Nullable="false" />
+          <Property Name="LinkedPropertyIds" Type="String" MaxLength="200" Unicode="false" FixedLength="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DemoModelStoreContainer" CdmEntityContainer="DemoEntities">
+          <EntitySetMapping Name="Properties">
+            <EntityTypeMapping TypeName="DemoModel.Property">
+              <MappingFragment StoreEntitySet="Property">
+                <ScalarProperty Name="PropertyID" ColumnName="PropertyID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PropertyTitle" ColumnName="PropertyTitle" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+                <ScalarProperty Name="PropertyName" ColumnName="PropertyName" />
+                <ScalarProperty Name="BreakagesDeposit" ColumnName="BreakagesDeposit" />
+                <ScalarProperty Name="TermsID" ColumnName="TermsID" />
+                <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+                <ScalarProperty Name="RowCompanyID" ColumnName="RowCompanyID" />
+                <ScalarProperty Name="RowContactID" ColumnName="RowContactID" />
+                <ScalarProperty Name="UmbracoNodeID" ColumnName="UmbracoNodeID" />
+                <ScalarProperty Name="PropertyReference" ColumnName="PropertyReference" />
+                <ScalarProperty Name="RentalNotes" ColumnName="RentalNotes" />
+                <ScalarProperty Name="ContractRenewalDate" ColumnName="ContractRenewalDate" />
+                <ScalarProperty Name="UseCustomWeekend" ColumnName="UseCustomWeekend" />
+                <ScalarProperty Name="EnableStayLengthDiscount" ColumnName="EnableStayLengthDiscount" />
+                <ScalarProperty Name="EnableEarlyBirdDiscount" ColumnName="EnableEarlyBirdDiscount" />
+                <ScalarProperty Name="EnableLastMinuteDiscount" ColumnName="EnableLastMinuteDiscount" />
+                <ScalarProperty Name="EnablePricingGroups" ColumnName="EnablePricingGroups" />
+                <ScalarProperty Name="EnableSmallPartyDiscount" ColumnName="EnableSmallPartyDiscount" />
+                <ScalarProperty Name="ChangeoverDayID" ColumnName="ChangeoverDayID" />
+                <ScalarProperty Name="IsDraft" ColumnName="IsDraft" />
+                <ScalarProperty Name="LinkedPropertyIds" ColumnName="LinkedPropertyIds" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Default" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram DiagramId="78ec7bc2d21e4bbfb5b5769334a0e190" Name="Diagram1">
+        <EntityTypeShape EntityType="DemoModel.Property" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

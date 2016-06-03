@@ -4,6 +4,8 @@ using System.Linq;
 using System.Collections.Generic;
 using DQuery;
 using DQuery.CustomQuery;
+using System.IO;
+using System.Text;
 
 
 namespace DQuery.UnitTests
@@ -11,29 +13,41 @@ namespace DQuery.UnitTests
     [TestClass]
     public class UnitTest1
     {
-        private string GetJson()
+        public static string LoadJson(string fileName = "query.json")
         {
-            return "[{\"operator\":\"=\",\"value\":\"002\",\"fieldname\":\"billno\"},{\"condition\":\"and\",\"items\":[{\"operator\":\"like\",\"value\":\"A\",\"fieldname\":\"cusclass\"},{\"operator\":\"like\",\"condition\":\"or\",\"value\":\"YUN\",\"fieldname\":\"cusname\",\"exfuc\":{\"name\":\"isnull\",\"params\":[\"bYUNb\"]}}]}]";
+            var stream = typeof(UnitTest1).Assembly.GetManifestResourceStream("DQuery.UnitTests." + fileName);
+
+            stream.Position = 0;
+
+            var json = string.Empty;
+
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                json = reader.ReadToEnd();
+            }
+
+            var start = json.IndexOf('[');
+
+            return json.Substring(start);
         }
 
         private List<QueryClause> GetClauses()
         {
-            return QueryClauseParser.Parse(GetJson());
+            var json = LoadJson();
+            return QueryClauseParser.Parse(json);
         }
 
         [TestMethod]
         public void TestBuilder()
         {
-            var clauses = GetClauses();
+            ar clauses = GetClauses();
             var lambda = ExpressionBuilder.Build<SampleEntity>(clauses, new SampleFunctions());
 
-            var entities = new List<SampleEntity>();
-            entities.Add(new SampleEntity { billno = "001", cusclass = "ABC", cusname = null });
-            entities.Add(new SampleEntity { billno = "002", cusclass = "A", cusname = "" });
-            var result = entities.Where(GetJson(), new SampleFunctions()).ToList();
-
-            Assert.AreEqual(result.Count, 1);
-            Assert.AreEqual(result[0].billno, "002");
+            using (var dataContext = new DemoEntities())
+            {
+                var result = dataContext.Properties.Where(LoadJson(), new SampleFunctions()).ToList();
+                Assert.AreEqual(result.Count, 1);
+            }
         }
     }
 

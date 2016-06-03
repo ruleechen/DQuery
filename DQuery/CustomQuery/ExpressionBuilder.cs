@@ -55,7 +55,7 @@ namespace DQuery.CustomQuery
                 }
                 else
                 {
-                    exp = Expression<Func<TSource, bool>>.MakeBinary(clauseExpType, exp, clauseExp);
+                    exp = Expression.MakeBinary(clauseExpType, exp, clauseExp);
                 }
             }
 
@@ -64,9 +64,9 @@ namespace DQuery.CustomQuery
 
         public Expression BuildClauseExp<TSource>(QueryClause clause, ParameterExpression parameter)
         {
-            var memberExp = Expression<Func<TSource, bool>>.Property(parameter, clause.FieldName);
+            var memberExp = Expression.Property(parameter, clause.FieldName);
             var memberType = GetMemberType(memberExp.Member);
-            var memberValueExp = Expression<Func<TSource, bool>>.Constant(clause.Value, memberType);
+            var memberValueExp = Expression.Constant(clause.Value, memberType);
 
             Expression composedExp = memberExp;
             if (clause.ExFunction != null)
@@ -75,7 +75,7 @@ namespace DQuery.CustomQuery
                 switch (name)
                 {
                     case "pyszm":
-                        composedExp = GetPyszmExp<TSource>(memberExp, EdmFunctions);
+                        composedExp = GetPyszmExp(memberExp, EdmFunctions);
                         break;
 
                     case "isnull":
@@ -116,10 +116,10 @@ namespace DQuery.CustomQuery
                     break;
 
                 case OperatorType.Like:
-                    return GetStringContainsExp<TSource>(composedExp, memberValueExp, true);
+                    return GetStringContainsExp(composedExp, memberValueExp, true);
 
                 case OperatorType.NotLike:
-                    return GetStringContainsExp<TSource>(composedExp, memberValueExp, false);
+                    return GetStringContainsExp(composedExp, memberValueExp, false);
 
                 case OperatorType.In:
                     //TODO:
@@ -135,10 +135,10 @@ namespace DQuery.CustomQuery
                 expType == ExpressionType.LessThan ||
                 expType == ExpressionType.LessThanOrEqual))
             {
-                return GetStringCompareExp<TSource>(composedExp, memberValueExp, expType);
+                return GetStringCompareExp(composedExp, memberValueExp, expType);
             }
 
-            return Expression<Func<TSource, bool>>.MakeBinary(expType, composedExp, memberValueExp);
+            return Expression.MakeBinary(expType, composedExp, memberValueExp);
         }
 
         public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
@@ -146,24 +146,24 @@ namespace DQuery.CustomQuery
             var parameter = Expression.Parameter(typeof(TSource), "x");
             var builder = new ExpressionBuilder { EdmFunctions = funcs };
             var expression = builder.BuildClauseExp<TSource>(clauses, parameter);
-            if (expression == null) { expression = Expression<Func<TSource, bool>>.Constant(true); }
+            if (expression == null) { expression = Expression.Constant(true); }
             return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
         }
         #endregion
 
         #region extends
-        public static Expression GetStringContainsExp<TSource>(Expression instance, Expression argument, bool contains)
+        public static Expression GetStringContainsExp(Expression instance, Expression argument, bool contains)
         {
-            var containsExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("Contains"), argument);
-            if (!contains) { return Expression<Func<TSource, bool>>.Not(containsExp); }
+            var containsExp = Expression.Call(instance, typeof(string).GetMethod("Contains"), argument);
+            if (!contains) { return Expression.Not(containsExp); }
             return containsExp;
         }
 
-        public static Expression GetStringCompareExp<TSource>(Expression instance, Expression argument, ExpressionType expType)
+        public static Expression GetStringCompareExp(Expression instance, Expression argument, ExpressionType expType)
         {
-            var compareToExp = Expression<Func<TSource, int>>.Call(typeof(string), "Compare", null, instance, argument);
-            var zeroExp = Expression<Func<TSource, int>>.Constant(0);
-            return Expression<Func<TSource, bool>>.MakeBinary(expType, compareToExp, zeroExp);
+            var compareToExp = Expression.Call(typeof(string), "Compare", null, instance, argument);
+            var zeroExp = Expression.Constant(0);
+            return Expression.MakeBinary(expType, compareToExp, zeroExp);
         }
 
         public static Expression GetIsnullExp<TSource>(MemberExpression member, List<object> parameters)
@@ -182,14 +182,14 @@ namespace DQuery.CustomQuery
             }
 
             var defaultValue = ConvertValue<TSource>(member.Member, parameters.First());
-            var defaultValueExp = Expression<Func<TSource, bool>>.Constant(defaultValue, memberType);
+            var defaultValueExp = Expression.Constant(defaultValue, memberType);
 
-            var nullExp = Expression<Func<TSource, bool>>.Constant(null);
-            var compareExp = Expression<Func<TSource, bool>>.MakeBinary(ExpressionType.Equal, member, nullExp);
-            return Expression<Func<TSource, bool>>.Condition(compareExp, defaultValueExp, member);
+            var nullExp = Expression.Constant(null);
+            var compareExp = Expression.MakeBinary(ExpressionType.Equal, member, nullExp);
+            return Expression.Condition(compareExp, defaultValueExp, member);
         }
 
-        public static Expression GetPyszmExp<TSource>(MemberExpression argument, IEdmFunctions funcs)
+        public static Expression GetPyszmExp(MemberExpression argument, IEdmFunctions funcs)
         {
             if (funcs == null)
             {
@@ -202,7 +202,7 @@ namespace DQuery.CustomQuery
                 throw new NotImplementedException("Pyszm function not implemented.");
             }
 
-            return Expression<Func<TSource, bool>>.Call(null, func.Method, argument);
+            return Expression.Call(null, func.Method, argument);
         }
         #endregion
 

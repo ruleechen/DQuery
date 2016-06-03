@@ -45,7 +45,7 @@ namespace DQuery.UnitTests
 
             using (var dataContext = new DemoEntities())
             {
-                var d = dataContext.Properties.Where(x => x.PropertyName.CompareTo("aaa") == 0).ToList();
+                //var d = dataContext.Properties.Where(x => x.PropertyName.CompareTo("aaa") == 0).ToList();
 
                 var result = dataContext.Properties.Where(LoadJson(), new SampleFunctions()).ToList();
                 Assert.AreEqual(result.Count, 1);

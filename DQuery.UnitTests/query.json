@@ -13,11 +13,21 @@
         "value": "Es"
       },
       {
+		"condition": "or",
 		"fieldname": "PropertyTitle",
         "operator": "not like",
-        "condition": "or",
         "value": "aaa"
-      }
+      },
+	  {
+		"condition": "or",
+		"fieldname": "LinkedPropertyIds",
+		"operator": "like",
+		"value": "10757",
+		 "exfuc": {
+          "name": "isnull",
+          "params": ["1"]
+        }
+	  }
     ]
   }
 ]

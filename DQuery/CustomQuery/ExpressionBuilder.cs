@@ -139,13 +139,20 @@ namespace DQuery.CustomQuery
             if (expression == null) { expression = Expression<Func<TSource, bool>>.Constant(true); }
             return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
         }
+        #endregion
 
-        private static Expression GetStringContainsExp<TSource>(Expression instance, Expression argument, bool contains)
+        #region extends
+        public static Expression GetStringContainsExp<TSource>(Expression instance, Expression argument, bool contains)
         {
-            var trueExp = Expression<Func<TSource, bool>>.Constant(true);
             var containsExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("Contains"), argument);
             if (!contains) { return Expression<Func<TSource, bool>>.Not(containsExp); }
             return containsExp;
+        }
+
+        public static Expression GetStringCompareToExp<TSource>(Expression instance, Expression argument)
+        {
+            var compareToExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("CompareTo"), argument);
+            return compareToExp;
         }
 
         public static Expression GetIsnullExp<TSource>(MemberExpression member, List<object> parameters)

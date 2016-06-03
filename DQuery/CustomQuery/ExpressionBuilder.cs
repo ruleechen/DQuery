@@ -65,7 +65,8 @@ namespace DQuery.CustomQuery
         public Expression BuildClauseExp<TSource>(QueryClause clause, ParameterExpression parameter)
         {
             var memberExp = Expression<Func<TSource, bool>>.Property(parameter, clause.FieldName);
-            var memberValueExp = Expression<Func<TSource, bool>>.Constant(clause.Value, GetMemberType(memberExp.Member));
+            var memberType = GetMemberType(memberExp.Member);
+            var memberValueExp = Expression<Func<TSource, bool>>.Constant(clause.Value, memberType);
 
             Expression composedExp = memberExp;
             if (clause.ExFunction != null)
@@ -128,6 +129,15 @@ namespace DQuery.CustomQuery
                     throw new NotSupportedException(clause.Operator.ToString());
             }
 
+            if (memberType == typeof(string) && (
+                expType == ExpressionType.GreaterThan ||
+                expType == ExpressionType.GreaterThanOrEqual ||
+                expType == ExpressionType.LessThan ||
+                expType == ExpressionType.LessThanOrEqual))
+            {
+                return GetStringCompareExp<TSource>(composedExp, memberValueExp, expType);
+            }
+
             return Expression<Func<TSource, bool>>.MakeBinary(expType, composedExp, memberValueExp);
         }
 
@@ -149,10 +159,11 @@ namespace DQuery.CustomQuery
             return containsExp;
         }
 
-        public static Expression GetStringCompareToExp<TSource>(Expression instance, Expression argument)
+        public static Expression GetStringCompareExp<TSource>(Expression instance, Expression argument, ExpressionType expType)
         {
-            var compareToExp = Expression<Func<TSource, bool>>.Call(instance, typeof(string).GetMethod("CompareTo"), argument);
-            return compareToExp;
+            var compareToExp = Expression<Func<TSource, int>>.Call(typeof(string), "Compare", null, instance, argument);
+            var zeroExp = Expression<Func<TSource, int>>.Constant(0);
+            return Expression<Func<TSource, bool>>.MakeBinary(expType, compareToExp, zeroExp);
         }
 
         public static Expression GetIsnullExp<TSource>(MemberExpression member, List<object> parameters)

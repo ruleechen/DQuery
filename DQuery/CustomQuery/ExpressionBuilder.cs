@@ -173,7 +173,7 @@ namespace DQuery.CustomQuery
             var canBeNull = (!memberType.IsValueType || (Nullable.GetUnderlyingType(memberType) != null));
             if (!canBeNull)
             {
-                return member;
+                throw new InvalidCastException("Isnull function require the column nullable");
             }
 
             if (parameters == null || parameters.Count == 0)

@@ -16,23 +16,23 @@ Sample JSON for query
 ```javascript
 [
   {
+    "fieldname": "billno",
     "operator": "=",
-    "value": "002",
-    "fieldname": "billno"
+    "value": "002"
   },
   {
     "condition": "and",
     "items": [
       {
+        "fieldname": "cusclass",
         "operator": "like",
-        "value": "A",
-        "fieldname": "cusclass"
+        "value": "A"
       },
       {
-        "operator": "like",
         "condition": "or",
-        "value": "YUN",
         "fieldname": "cusname",
+        "operator": "like",
+        "value": "YUN",
         "exfuc": {
           "name": "isnull",
           "params": ["bYUNb"]

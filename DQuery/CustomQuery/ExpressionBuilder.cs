@@ -133,9 +133,10 @@ namespace DQuery.CustomQuery
 
         public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
         {
-            var builder = new ExpressionBuilder { EdmFunctions = funcs };
             var parameter = Expression.Parameter(typeof(TSource), "x");
+            var builder = new ExpressionBuilder { EdmFunctions = funcs };
             var expression = builder.BuildClauseExp<TSource>(clauses, parameter);
+            if (expression == null) { expression = Expression<Func<TSource, bool>>.Constant(true); }
             return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
         }
 
@@ -226,6 +227,11 @@ namespace DQuery.CustomQuery
 
         private static void ConvertClauseValue<TSource>(IEnumerable<QueryClause> clauses, IEnumerable<PropertyInfo> propertyInfos = null)
         {
+            if (!clauses.Any())
+            {
+                return;
+            }
+
             var clausesLeft = clauses.ToList(); // clone
             var clausesDeal = new List<QueryClause>();
             var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);

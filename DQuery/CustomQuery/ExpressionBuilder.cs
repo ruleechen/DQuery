@@ -9,7 +9,18 @@ namespace DQuery.CustomQuery
 {
     public class ExpressionBuilder
     {
-        #region Build
+        #region main
+        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            var builder = new ExpressionBuilder { EdmFunctions = funcs };
+            var expression = builder.BuildClauseExp<TSource>(clauses, parameter);
+            if (expression == null) { expression = Expression.Constant(true); }
+            return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
+        }
+        #endregion
+
+        #region build
         public IEdmFunctions EdmFunctions { get; set; }
 
         public Expression BuildClauseExp<TSource>(List<QueryClause> clauses, ParameterExpression parameter)
@@ -140,15 +151,6 @@ namespace DQuery.CustomQuery
 
             return Expression.MakeBinary(expType, composedExp, memberValueExp);
         }
-
-        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            var builder = new ExpressionBuilder { EdmFunctions = funcs };
-            var expression = builder.BuildClauseExp<TSource>(clauses, parameter);
-            if (expression == null) { expression = Expression.Constant(true); }
-            return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
-        }
         #endregion
 
         #region extends
@@ -173,12 +175,12 @@ namespace DQuery.CustomQuery
             var canBeNull = (!memberType.IsValueType || (Nullable.GetUnderlyingType(memberType) != null));
             if (!canBeNull)
             {
-                throw new InvalidCastException("Isnull function require the column nullable");
+                throw new InvalidCastException("Isnull function require the column nullable.");
             }
 
             if (parameters == null || parameters.Count == 0)
             {
-                throw new ArgumentNullException("Isnull function require a parameter");
+                throw new ArgumentNullException("Isnull function require a parameter.");
             }
 
             var defaultValue = ConvertValue<TSource>(member.Member, parameters.First());

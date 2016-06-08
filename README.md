@@ -1,5 +1,5 @@
 # DQuery
-Dynamic Query Builder for yundangnet. DQuery parse json query clauses to C# expression for Linq. We can use it on common linq query and EntityFromework.
+Dynamic Query Builder with json string source to let you to do linq query with json string. DQuery parse json query clauses to C# expression for linq. We can use it on common linq query and even EntityFromework.
 
 Sample Entity for query
 ------------
@@ -11,6 +11,7 @@ public class SampleEntity
     public string cusname { get; set; }
 }
 ```
+
 Sample JSON for query
 ------------
 ```javascript
@@ -41,9 +42,17 @@ Sample JSON for query
     ]
   }
 ]
+
+// associated expression preview
+// x => ((x.billno == "002") And (x.cusclass.Contains("A") Or IIF((x.cusname == null), "bYUNb", x.cusname).Contains("YUN")))
 ```
-C# Expression 
+
+Useage
 ------------
 ```C#
-x => ((x.billno == "002") And (x.cusclass.Contains("A") Or IIF((x.cusname == null), "bYUNb", x.cusname).Contains("YUN")))
+using (var dataContext = new DemoEntities())
+{
+    var json = LoadJson()
+    var result = dataContext.Properties.Where(json).ToList();
+}
 ```

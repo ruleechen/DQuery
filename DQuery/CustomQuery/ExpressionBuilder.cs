@@ -198,13 +198,13 @@ namespace DQuery.CustomQuery
                 throw new NotSupportedException("DQuery functions not specified.");
             }
 
-            var func = funcs.GetPyszmFunc();
-            if (func == null)
+            var pyszm = funcs.GetPyszmFunc();
+            if (pyszm == null)
             {
                 throw new NotImplementedException("Pyszm function not implemented.");
             }
 
-            return Expression.Call(null, func.Method, argument);
+            return Expression.Call(null, pyszm.Method, argument);
         }
         #endregion
 

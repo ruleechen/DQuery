@@ -1,5 +1,4 @@
-﻿
-namespace DQuery
+﻿namespace DQuery
 {
     internal static class ObjectExtensions
     {

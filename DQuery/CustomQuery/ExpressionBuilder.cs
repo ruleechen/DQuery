@@ -175,12 +175,12 @@ namespace DQuery.CustomQuery
             var canBeNull = (!memberType.IsValueType || (Nullable.GetUnderlyingType(memberType) != null));
             if (!canBeNull)
             {
-                throw new InvalidCastException("Isnull function require the column nullable");
+                throw new InvalidCastException("Isnull function require the column nullable.");
             }
 
             if (parameters == null || parameters.Count == 0)
             {
-                throw new ArgumentNullException("Isnull function require a parameter");
+                throw new ArgumentNullException("Isnull function require a parameter.");
             }
 
             var defaultValue = ConvertValue<TSource>(member.Member, parameters.First());

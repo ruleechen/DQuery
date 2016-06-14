@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DQuery.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,18 @@ namespace DQuery.CustomQuery
 {
     public class ExpressionBuilder
     {
-        #region Build
+        #region main
+        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            var builder = new ExpressionBuilder { EdmFunctions = funcs };
+            var expression = builder.BuildClauseExp<TSource>(clauses, parameter);
+            if (expression == null) { expression = Expression.Constant(true); }
+            return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
+        }
+        #endregion
+
+        #region build
         public IEdmFunctions EdmFunctions { get; set; }
 
         public Expression BuildClauseExp<TSource>(List<QueryClause> clauses, ParameterExpression parameter)
@@ -140,15 +151,6 @@ namespace DQuery.CustomQuery
 
             return Expression.MakeBinary(expType, composedExp, memberValueExp);
         }
-
-        public static Expression<Func<TSource, bool>> Build<TSource>(List<QueryClause> clauses, IEdmFunctions funcs)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            var builder = new ExpressionBuilder { EdmFunctions = funcs };
-            var expression = builder.BuildClauseExp<TSource>(clauses, parameter);
-            if (expression == null) { expression = Expression.Constant(true); }
-            return Expression.Lambda<Func<TSource, bool>>(expression, parameter);
-        }
         #endregion
 
         #region extends
@@ -227,7 +229,7 @@ namespace DQuery.CustomQuery
             var values = new Dictionary<string, object>();
             values.Add(member.Name, value);
 
-            var mapper = CreateMapper();
+            var mapper = MapperFactory.CreateMapper();
             var instance = mapper.Map<TSource>(values);
 
             if (member.MemberType == MemberTypes.Property)
@@ -270,7 +272,7 @@ namespace DQuery.CustomQuery
 
             if (clausesDeal.Count > 0)
             {
-                var mapper = CreateMapper();
+                var mapper = MapperFactory.CreateMapper();
                 var instance = mapper.Map<TSource>(values);
 
                 if (propertyInfos == null)
@@ -293,15 +295,6 @@ namespace DQuery.CustomQuery
                     ConvertClauseValue<TSource>(clausesLeft, propertyInfos);
                 }
             }
-        }
-
-        private static IMapper CreateMapper()
-        {
-            var config = new MapperConfiguration(cfg => { });
-
-            var mapper = config.CreateMapper();
-
-            return mapper;
         }
         #endregion
     }

@@ -59,6 +59,8 @@
     <Compile Include="Extensions\QueryExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Mapper\Base64Converter.cs" />
+    <Compile Include="Mapper\MapperFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

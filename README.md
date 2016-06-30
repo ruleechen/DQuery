@@ -1,5 +1,5 @@
 # DQuery
-Dynamic Query Builder to let you to do linq query with json string. DQuery parse json query clauses to C# expression for linq. We can use it on common linq query and even EntityFromework.
+Dynamic query builder to let you to do linq query with json string. DQuery parse json query clauses to C# expression for linq. We can use it on common linq query and even EntityFromework.
 
 Sample Entity for query
 ------------
